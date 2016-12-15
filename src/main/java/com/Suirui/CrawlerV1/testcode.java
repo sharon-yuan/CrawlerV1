@@ -20,7 +20,7 @@ import org.jsoup.nodes.Element;
 
 public class testcode {
 	public static void main(String[]args){
-		int i =532;
+		int i =831;
 		int bengkuiTimes=0;
 		Proxys proxys = new Proxys();
 
@@ -221,7 +221,8 @@ public class testcode {
 						retryTimes++;
 						Thread.sleep(1000);
 						if(retryTimes%10==0){System.err.println("wait "+retryTimes+"s");
-						if(retryTimes>=60) throw new Exception("waited 40s for nextButton");
+						if(retryTimes==60)nextButton.click();
+						if(retryTimes>=120) throw new Exception("waited 60s for nextButton");
 						}}
 					lasturl=driver.getCurrentUrl();
 					System.err.println("click done");
@@ -234,7 +235,6 @@ public class testcode {
 				bengkuiTimes++;
 				driver.close();
 				driver.quit();
-				
 				openedFlag = false;
 				proxys.remove(proxy);
 				e.printStackTrace();

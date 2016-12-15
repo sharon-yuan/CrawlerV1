@@ -171,9 +171,10 @@ public class WorkThread implements Runnable{
 				int tmpCashTime = cashTime.getAndIncrement();
 				System.err.println("cash time = " +  tmpCashTime);
 			}
-			System.out.println("Thread " + Thread.currentThread().getName() + "end");
-			countDownLatch.countDown();
+			
 		}
+		System.out.println("Thread " + Thread.currentThread().getName() + "end");
+		countDownLatch.countDown();
 	}
 
 }

@@ -54,7 +54,7 @@ public class WorkThread implements Runnable {
 
 	@Override
 	public void run() {
-		System.out.println("Thread " + Thread.currentThread().getName() + "begin , startIndex = " + startIndex
+		System.err.println("Thread " + Thread.currentThread().getName() + "begin , startIndex = " + startIndex
 				+ ", endIndex = " + endIndex);
 		if (startIndex == 0 || endIndex == 0) {
 			countDownLatch.countDown();
@@ -68,16 +68,21 @@ public class WorkThread implements Runnable {
 		for (String[] tempProxy : proxyList) {
 			proxys.add(tempProxy[0], Integer.valueOf(tempProxy[1]));
 		}
-		System.out.println("total proxy count = " + proxys.size());
+		System.err.println("total proxy count = " + proxys.size());
 
 		System.setProperty("webdriver.gecko.driver", "D:\\MyDrivers\\geckodriver-v0.11.1-win64\\geckodriver.exe");
-		// System.setProperty("webdriver.gecko.driver",
-		// "D:\\Softwares\\geckodriver-v0.11.1-win64\\geckodriver.exe");
-		// System.setProperty("webdriver.firefox.bin",
-		// "D:\\Softwares\\firefox\\firefox.exe");
+//		 System.setProperty("webdriver.gecko.driver",
+//		 "D:\\Softwares\\geckodriver-v0.11.1-win64\\geckodriver.exe");
+//		 System.setProperty("webdriver.firefox.bin",
+//		 "D:\\Softwares\\firefox\\firefox.exe");
 		boolean openedFlag = false;
 		while (!openedFlag) {
-
+			if (proxys.size() <= 0) {
+				countDownLatch.countDown();
+				System.err.println("proxy out!" );
+				System.out.println("Thread " + Thread.currentThread().getName() + "end");
+				return;
+			}
 			java.net.Proxy proxy = proxys.nextRandom();
 			String[] proxyarray = proxy.toString().split(":");
 			String proxyHost = proxyarray[0].split("/")[1];

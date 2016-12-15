@@ -10,7 +10,7 @@ import java.util.concurrent.CountDownLatch;
 public class Test1 {
 	public static void main(String[] args) {
 		System.err.println("begin at " + (new Date()));
-		int threadNumber = 5;
+		int threadNumber = 7;
         final CountDownLatch countDownLatch = new CountDownLatch(threadNumber);
         
 		WorkThread thread = new WorkThread();

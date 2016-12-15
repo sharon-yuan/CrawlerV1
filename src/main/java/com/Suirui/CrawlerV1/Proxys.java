@@ -17,7 +17,6 @@
  */
 package com.Suirui.CrawlerV1;
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,64 +35,70 @@ import org.slf4j.LoggerFactory;
  * @author hu
  */
 public class Proxys extends ArrayList<Proxy> {
-    public static final Logger LOG=LoggerFactory.getLogger(Proxys.class);
+	public static final Logger LOG = LoggerFactory.getLogger(Proxys.class);
 
-    public static Random random = new Random();
-    
-    public Proxy nextRandom(){
-        int r=random.nextInt(this.size());
-        return this.get(r);
-    }
-    
-    public void addEmpty(){
-        Proxy nullProxy=null;
-        this.add(nullProxy);
-    }
+	public static Random random = new Random();
 
-    public void add(String ip, int port) {
-        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(ip, port));
-        this.add(proxy);
-    }
+	public Proxy nextRandom() {
+		synchronized (this) {
+			int r = random.nextInt(this.size());
+			return this.get(r);
+		}
+	}
 
-    public void add(String proxyStr) throws Exception {
-        try {
-            String[] infos = proxyStr.split(":");
-            String ip = infos[0];
-            int port = Integer.valueOf(infos[1]);
+	public void addEmpty() {
+		Proxy nullProxy = null;
+		this.add(nullProxy);
+	}
 
-            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(ip, port));
-            this.add(proxy);
-        } catch (Exception ex) {
-            LOG.info("Exception", ex);
-        }
+	public void add(String ip, int port) {
+		Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(ip, port));
+		this.add(proxy);
+	}
 
-    }
-    
-    public void remove(String proxyStr){
-    	String[] infos = proxyStr.split(":");
-    
-        String ip = infos[0];
-        if(ip.contains("/"))
-        	ip=ip.split("/")[1];
-        int port = Integer.valueOf(infos[1]);
+	public void add(String proxyStr) throws Exception {
+		synchronized (this) {
+			try {
+				String[] infos = proxyStr.split(":");
+				String ip = infos[0];
+				int port = Integer.valueOf(infos[1]);
 
-        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(ip, port));
-        if(!this.contains(proxy)){System.err.println("proxys doesn't contain proxy!"+ip+":"+port);}
-        this.remove(proxy);
-    }
+				Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(ip, port));
+				this.add(proxy);
+			} catch (Exception ex) {
+				LOG.info("Exception", ex);
+			}
+		}
+	}
 
+	public void remove(String proxyStr) {
+		synchronized (this) {
+			String[] infos = proxyStr.split(":");
 
-    public void addAllFromFile(File file) throws Exception {
-        FileInputStream fis = new FileInputStream(file);
-        BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-        String line = null;
-        while ((line = br.readLine()) != null) {
-            line = line.trim();
-            if (line.startsWith("#")||line.isEmpty()) {
-                continue;
-            } else {
-                this.add(line);
-            }
-        }
-    }
+			String ip = infos[0];
+			if (ip.contains("/"))
+				ip = ip.split("/")[1];
+			int port = Integer.valueOf(infos[1]);
+
+			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(ip, port));
+			if (!this.contains(proxy)) {
+				System.err.println("proxys doesn't contain proxy!" + ip + ":" + port);
+			}
+			this.remove(proxy);
+		}
+	}
+
+	public void addAllFromFile(File file) throws Exception {
+		FileInputStream fis = new FileInputStream(file);
+		BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+		String line = null;
+		while ((line = br.readLine()) != null) {
+			line = line.trim();
+			if (line.startsWith("#") || line.isEmpty()) {
+				continue;
+			} else {
+				this.add(line);
+			}
+		}
+	}
 }

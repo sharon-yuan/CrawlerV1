@@ -4,6 +4,7 @@
  */
 package com.Suirui.CrawlerV1;
 
+import java.io.File;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
@@ -77,7 +78,14 @@ public class WorkThread implements Runnable {
 		// "D:\\Softwares\\firefox\\firefox.exe");
 		boolean openedFlag = false;
 		while (!openedFlag) {
+			if (proxys.size() <= 7) {
+				proxyList = proxyController.readerProxyFromDir();
+				for (String[] tempProxy : proxyList) {
+					proxys.add(tempProxy[0], Integer.valueOf(tempProxy[1]));
+				}
+				System.out.println("total proxy count = " + proxys.size());
 
+			}
 			java.net.Proxy proxy = proxys.nextRandom();
 			String[] proxyarray = proxy.toString().split(":");
 			String proxyHost = proxyarray[0].split("/")[1];
@@ -125,6 +133,11 @@ public class WorkThread implements Runnable {
 			WebDriver driver = new FirefoxDriver(profile);
 
 			try {
+				File file = new File("E:/data/china/links/" + i);
+				while (file.exists()) {
+					i++;
+					file = new File("E:/data/china/links/" + i);
+				}
 				String lasturl = "http://search.ccgp.gov.cn/dataB.jsp?searchtype=1&page_index=" + i
 						+ "&buyerName=&projectId=&dbselect=infox&kw=&start_time=2016%3A01%3A01&end_time=2016%3A06%3A29&timeType=6&bidSort=2&pinMu=0&bidType=1&displayZone=&zoneId=&pppStatus=&agentName=";
 				driver.get(lasturl);
@@ -136,17 +149,16 @@ public class WorkThread implements Runnable {
 					Elements elements = doc.getElementsByAttribute("href");
 
 					String linkContent = "";
+
+					WebElement nextButton = driver.findElement(By.className("next"));
+					lasturl = driver.getCurrentUrl();
 					for (Element element : elements) {
 						if (element.attr("href").matches("http://www.ccgp.gov.cn/cggg/.*htm")) {
-							System.out.println(element.attr("href"));
-
 							linkContent += element.attr("href") + '\n';
 						}
 					}
 					FileIO.saveintoFile("E:/data/china/links/" + i, linkContent);
 
-					WebElement nextButton = driver.findElement(By.className("next"));
-					lasturl = driver.getCurrentUrl();
 					nextButton.click();
 					int sleepLongth = 5000 + (int) (Math.random() * 5000);
 					Thread.sleep(sleepLongth);

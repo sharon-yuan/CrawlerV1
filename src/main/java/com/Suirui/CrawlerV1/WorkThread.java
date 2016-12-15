@@ -22,41 +22,46 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 
-public class WorkThread implements Runnable{
-	public static AtomicInteger  cashTime = new AtomicInteger(0);
+public class WorkThread implements Runnable {
+	public static AtomicInteger cashTime = new AtomicInteger(0);
 	private int startIndex;
 	private int endIndex;
 	private CountDownLatch countDownLatch;
-	
-	
+
 	public CountDownLatch getCountDownLatch() {
 		return countDownLatch;
 	}
+
 	public void setCountDownLatch(CountDownLatch countDownLatch) {
 		this.countDownLatch = countDownLatch;
 	}
+
 	public int getStartIndex() {
 		return startIndex;
 	}
+
 	public void setStartIndex(int startIndex) {
 		this.startIndex = startIndex;
 	}
+
 	public int getEndIndex() {
 		return endIndex;
 	}
+
 	public void setEndIndex(int endIndex) {
 		this.endIndex = endIndex;
 	}
 
 	@Override
 	public void run() {
-		System.out.println("Thread " + Thread.currentThread().getName() + "begin , startIndex = " + startIndex + ", endIndex = " + endIndex);
-		if (startIndex ==0 || endIndex == 0 ) {
+		System.out.println("Thread " + Thread.currentThread().getName() + "begin , startIndex = " + startIndex
+				+ ", endIndex = " + endIndex);
+		if (startIndex == 0 || endIndex == 0) {
 			countDownLatch.countDown();
 			System.out.println("Thread " + Thread.currentThread().getName() + "end");
 			return;
 		}
-		
+
 		int i = startIndex;
 		Proxys proxys = new Proxys();
 		List<String[]> proxyList = proxyController.readerProxyFromDir();
@@ -65,10 +70,11 @@ public class WorkThread implements Runnable{
 		}
 		System.out.println("total proxy count = " + proxys.size());
 
+		System.setProperty("webdriver.gecko.driver", "D:\\MyDrivers\\geckodriver-v0.11.1-win64\\geckodriver.exe");
 		// System.setProperty("webdriver.gecko.driver",
-		// "D:\\MyDrivers\\geckodriver-v0.11.1-win64\\geckodriver.exe");
-		System.setProperty("webdriver.gecko.driver", "D:\\Softwares\\geckodriver-v0.11.1-win64\\geckodriver.exe");
-		System.setProperty("webdriver.firefox.bin", "D:\\Softwares\\firefox\\firefox.exe");
+		// "D:\\Softwares\\geckodriver-v0.11.1-win64\\geckodriver.exe");
+		// System.setProperty("webdriver.firefox.bin",
+		// "D:\\Softwares\\firefox\\firefox.exe");
 		boolean openedFlag = false;
 		while (!openedFlag) {
 
@@ -76,8 +82,8 @@ public class WorkThread implements Runnable{
 			String[] proxyarray = proxy.toString().split(":");
 			String proxyHost = proxyarray[0].split("/")[1];
 			int proxyPort = Integer.valueOf(proxyarray[1]);
-			
-			//测试可用性
+
+			// 测试可用性
 			System.err.println("test proxy " + proxy);
 			try {
 				Proxy tmpproxy = new Proxy(java.net.Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort));
@@ -151,10 +157,10 @@ public class WorkThread implements Runnable{
 						Thread.sleep(1000);
 						if (retryTimes % 10 == 0) {
 							System.err.println("wait " + retryTimes + "s");
-							if (retryTimes >= 60) {
-								throw new Exception("waited 40s for nextButton");
-							}
-								
+							if (retryTimes == 60)
+								nextButton.click();
+							if (retryTimes >= 120)
+								throw new Exception("waited 60s for nextButton");
 						}
 					}
 					lasturl = driver.getCurrentUrl();
@@ -169,14 +175,12 @@ public class WorkThread implements Runnable{
 				proxys.remove(proxy);
 				e.printStackTrace();
 				int tmpCashTime = cashTime.getAndIncrement();
-				System.err.println("cash time = " +  tmpCashTime);
+				System.err.println("cash time = " + tmpCashTime);
 			}
-			
+
 		}
 		System.out.println("Thread " + Thread.currentThread().getName() + "end");
 		countDownLatch.countDown();
 	}
 
 }
-
-

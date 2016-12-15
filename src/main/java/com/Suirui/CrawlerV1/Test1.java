@@ -4,32 +4,17 @@
  */
 package com.Suirui.CrawlerV1;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.URL;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
 
 public class Test1 {
 	public static void main(String[] args) {
 		System.err.println("begin at " + (new Date()));
-		int threadNumber = 4;
+		int threadNumber = 5;
         final CountDownLatch countDownLatch = new CountDownLatch(threadNumber);
         
 		WorkThread thread = new WorkThread();
-		for (int i = 0; i < threadNumber;i++) {
+		for (int i = 1; i <= threadNumber;i++) {
 			thread.setCountDownLatch(countDownLatch);
 			thread.setStartIndex(i * 1000 + 1);
 			thread.setEndIndex(i * 1000 + 1000);

@@ -11,6 +11,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -72,10 +73,10 @@ public class WorkThread implements Runnable {
 		System.err.println("total proxy count = " + proxys.size());
 
 		System.setProperty("webdriver.gecko.driver", "D:\\MyDrivers\\geckodriver-v0.11.1-win64\\geckodriver.exe");
-//		 System.setProperty("webdriver.gecko.driver",
-//		 "D:\\Softwares\\geckodriver-v0.11.1-win64\\geckodriver.exe");
-//		 System.setProperty("webdriver.firefox.bin",
-//		 "D:\\Softwares\\firefox\\firefox.exe");
+		// System.setProperty("webdriver.gecko.driver",
+		// "D:\\Softwares\\geckodriver-v0.11.1-win64\\geckodriver.exe");
+		// System.setProperty("webdriver.firefox.bin",
+		// "D:\\Softwares\\firefox\\firefox.exe");
 		boolean openedFlag = false;
 		while (!openedFlag) {
 
@@ -85,7 +86,6 @@ public class WorkThread implements Runnable {
 					proxys.add(tempProxy[0], Integer.valueOf(tempProxy[1]));
 				}
 				System.out.println("total proxy count = " + proxys.size());
-
 
 			}
 			java.net.Proxy proxy = proxys.nextRandom();
@@ -180,7 +180,12 @@ public class WorkThread implements Runnable {
 					lasturl = driver.getCurrentUrl();
 					i++;
 				}
-				Thread.sleep(1000);
+				//随机睡1分钟到3分钟
+				int max = 60 * 1000;
+				int min = 3 * 60 * 1000;
+				Random random = new Random();
+				int s = random.nextInt(max) % (max - min + 1) + min;
+				Thread.sleep((long) s);
 				openedFlag = true;
 			} catch (Exception e) {
 				driver.close();

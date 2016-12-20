@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package com.Suirui.CrawlerV1;
+package com.Suirui.CrawlerV1.util;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -47,13 +47,17 @@ public class Proxys extends ArrayList<Proxy> {
 	}
 
 	public void addEmpty() {
-		Proxy nullProxy = null;
-		this.add(nullProxy);
+		synchronized (this) {
+			Proxy nullProxy = null;
+			this.add(nullProxy);
+		}
 	}
 
 	public void add(String ip, int port) {
-		Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(ip, port));
-		this.add(proxy);
+		synchronized (this) {
+			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(ip, port));
+			this.add(proxy);
+		}
 	}
 
 	public void add(String proxyStr) throws Exception {
@@ -89,6 +93,7 @@ public class Proxys extends ArrayList<Proxy> {
 	}
 
 	public void addAllFromFile(File file) throws Exception {
+
 		FileInputStream fis = new FileInputStream(file);
 		BufferedReader br = new BufferedReader(new InputStreamReader(fis));
 		String line = null;
@@ -98,6 +103,22 @@ public class Proxys extends ArrayList<Proxy> {
 				continue;
 			} else {
 				this.add(line);
+			}
+		}
+	}
+
+	public void addAll(ArrayList<String> linesArray) {
+		synchronized (this) {
+			for (int i = 0; i < linesArray.size(); i++) {
+				String proxyString=linesArray.get(i);
+				if(linesArray.get(i).contains("/")){
+					proxyString=proxyString.split("/")[1];
+				}
+				String[] infos = proxyString.split(":");
+				String ip = infos[0];
+				int port = Integer.valueOf(infos[1]);
+				this.add(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(ip, port)));
+
 			}
 		}
 	}

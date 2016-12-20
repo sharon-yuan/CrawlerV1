@@ -1,4 +1,4 @@
-package com.Suirui.CrawlerV1;
+package com.Suirui.CrawlerV1.util;
 
 import java.io.BufferedReader;
 import java.io.File;

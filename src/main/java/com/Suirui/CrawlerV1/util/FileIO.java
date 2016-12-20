@@ -1,4 +1,4 @@
-package com.Suirui.CrawlerV1;
+package com.Suirui.CrawlerV1.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 public class FileIO {
 	/**
@@ -101,5 +102,34 @@ public class FileIO {
 		return result;
 		
 	}
+	
+
+	public static ArrayList<String> getLinesArray(String filePath) {
+		ArrayList<String> result=new ArrayList<>();
+		BufferedReader input;
+		try {
+			input=new BufferedReader(new InputStreamReader(new FileInputStream(new File(filePath)), "utf-8"));
+			String line;
+			while ((line=input.readLine()) !=null){
+				result.add(line);}
+			input.close();
+		} catch (UnsupportedEncodingException e) {
+			
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			
+			e.printStackTrace();
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+		
+	
+		
+		return result;
+		
+	}
+
+
 
 }

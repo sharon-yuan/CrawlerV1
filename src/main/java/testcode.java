@@ -1,4 +1,4 @@
-package com.Suirui.CrawlerV1;
+
 
 
 import java.io.InputStream;
@@ -8,6 +8,8 @@ import java.net.Proxy;
 import java.net.URL;
 import java.util.List;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -16,15 +18,22 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
+
+import com.Suirui.CrawlerV1.util.FileIO;
+import com.Suirui.CrawlerV1.util.Proxys;
+import com.Suirui.CrawlerV1.util.ProxyController;
+
 import org.jsoup.nodes.Element;
 
 public class testcode {
 	public static void main(String[]args){
+		Logger logger = Logger.getLogger("com.gargoylesoftware.htmlunit");
+		logger.setLevel(Level.OFF);
 		int i =831;
 		int bengkuiTimes=0;
 		Proxys proxys = new Proxys();
 
-		List<String[]> proxyList = proxyController.readerProxyFromDir();
+		List<String[]> proxyList = ProxyController.readerProxyFromDir();
 		System.out.println(proxyList.get(0).length);
 		for (String[] tempProxy : proxyList) {
 			System.out.println(tempProxy[0] + " " + tempProxy[1]);
@@ -38,7 +47,7 @@ public class testcode {
 		boolean openedFlag = false;
 		while (!openedFlag) {
 			if(proxys.size()<=3){
-				proxyList = proxyController.readerProxyFromDir();
+				proxyList = ProxyController.readerProxyFromDir();
 				System.out.println(proxyList.get(0).length);
 				for (String[] tempProxy : proxyList) {
 					System.out.println(tempProxy[0] + " " + tempProxy[1]);

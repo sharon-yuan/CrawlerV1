@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package com.Suirui.CrawlerV1;
+package com.Suirui.CrawlerV1.util;
 
 /**
  * 全局配置
@@ -35,5 +35,11 @@ public class Config {
 	public static int TIMEOUT_READ = 10000;
 	public static int MAX_EXECUTE_COUNT = 10;
 	public static String DEFAULT_HTTP_METHOD = "GET";
-	public static String PROXY_DIR = "E:/data/china/proxy";
+	public static String PROXY_DIR = "E:/data/china/proxy/";
+	public static String LINKS_DIR = "E:/data/china/links/";
+	public static String PAGES_DIR = "E:/data/china/pages2/";
+	//public static String PAGES_DIR = "E:/data/china/pages/";
+	
+//	public static String LINKS_DIR = "E:/test/links/";
+//	public static String PAGES_DIR = "E:/test/pages/";
 }

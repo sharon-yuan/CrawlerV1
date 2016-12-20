@@ -1,3 +1,4 @@
+
 /**
  * user : wqp0010@gmail.com 
  * date : 2016年12月15日 上午10:04:54
@@ -5,7 +6,6 @@
 package com.Suirui.CrawlerV1.net;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
@@ -16,8 +16,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.net.telnet.TelnetClient;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
